@@ -1,0 +1,14 @@
+** npm install webpack-dev-server --save-dev 
+
+** webpack.config.js파일에 내용추가
+  --------------------------------
+  - devServer: {
+      port: 8000,
+      inline: true
+    }
+  --------------------------------
+
+** package.json에 내용추가.
+ ---------------------------------
+ "scripts":{ "start" : "webpack-dev-server --config webpack.config.js" }
+ ---------------------------------

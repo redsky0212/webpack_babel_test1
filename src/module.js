@@ -1,2 +1,2 @@
-const number = [1,2,3];
+const number = [1,2,3,4];
 export default number;

@@ -32,6 +32,10 @@ module.exports = {
             template: './src/index.html',
             filename: './index.html'
         })
-    ]
+    ],
+    devServer: {
+        port: 8000,
+        inline: true
+    }
 };
 
