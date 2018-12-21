@@ -1,0 +1,79 @@
+***** 설치방법 참조 사이트 ( http://beomy.tistory.com/42 )
+
+
+** webpack + babel 
+
+** 프로젝트 폴더에서 npm init -y 
+  - npm package.json 생성 (-y는 모든 값 기본값으로...)
+
+** webpack설치
+  - npm install webpack webpack-cli --save-dev로 webpack과 webpack-cli를 로컬로 설치합니다. webpack 4는 webpack-cli를 함께 설치해 주어야 합니다.
+
+** babel-loader 설치
+  - webpack에서 babel을 사용하기 위해서는 babel loader와 babel core, babel preset env 3개를 설치해줘야 한다.
+  - npm install babel-loader @babel/core @babel/preset-env --save-dev로  최신 버전(babel-lader 8, babel 7)으로 설치.
+
+** css-loader, style-loader 설치
+  - style-loader는 자바스크립트로 변경된 css를 DOM에 추가해주는 loader입니다. 보통 css-loader와 style-loader 함께 사용.
+  - npm install css-loader style-loader --save-dev
+
+** html-webpack-plugin 설치
+  - 번들된 html파일에 자동으로 <script /> 태그를 넣어주는 plugin입니다.
+  - npm install html-webpack-plugin --save-dev
+
+** webpack은 설정없이 기본으로 bundle하면
+  - src/index.html파일을 dist/index.html 로 시작 html을 만들고
+  - src/index.js파일을 dist/main.js 파일로 생성한다.
+
+** webpack시 설정파일을 생성한다. (webpack.config.js)
+  - mode : webpack 생성 할 번들 모드를 설정하는 부분입니다. development로 설정하였습니다.
+  - module.rules : loader를 정의하는 부분입니다. babel-loader와 style-loader, css-loader을 사용하여 설정하였습니다.
+  - babel-loader의 options : presets로 @babel/preset-env를 설정하여, babel에서 미리 정의해둔 환경으로 ES6에서 ES5로 변환합니다. 이 부분이 정의되어 있지 않다면 ES6에서 ES5로 정상적으로 변환되지 않습니다.
+  - plugins : plugin들을 설정하는 부분입니다. HtmlWebPackPlugin을 사용하였습니다.
+  - HtmlWebPackPlugin의 template : 복사하는 파일의 경로를 나타냅니다. 
+  - HtmlWebPackPlugin의 filename : template의 파일을 붙여넣을 파일의 경로를 나타냅니다. 즉 template에서 filename으로 번들 된 파일이 <script />로 추된 html 파일이 복사됩니다. ./src/index.html 파일이 ./dist/index.html로 복사됩니다,
+    (아래의 코드에는 entry와 output이 정의하지 않았습니다. entry의 기본값인 ./src/index.js가 entry가 되고, output의 기본값인 ./dist/main.js로 번들 된 파일이 생성됩니다.)
+    --------------------------------------------------------------------
+    // const path = require('path');
+    const HtmlWebPackPlugin = require('html-webpack-plugin');
+    
+    module.exports = {
+        mode: 'development',
+        /* 이 부분은 entry와 output의 기본값으로 생략 가능합니다.
+        entry: './src/index.js',
+        output: {
+        filename: 'main.js',
+        path: path.resolve(__dirname, 'dist')
+        }, */
+        module: {
+            rules: [
+                {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
+                }
+                },
+                {
+                    test: /\.css$/,
+                    use: ['style-loader', 'css-loader']
+                }
+            ]
+        },
+        plugins: [
+            new HtmlWebPackPlugin({
+                template: './src/index.html',
+                filename: './index.html'
+            })
+        ]
+    };
+    ---------------------------------------------------------------------------
+
+** package.json에 npm script 입력
+  - "scripts": { "build": "webpack" },
+
+** npm run build
+  - 최종적으로 실행을 하면 dist폴더에 파일들이 생성됩니다.
